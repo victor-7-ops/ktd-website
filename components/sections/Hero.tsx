@@ -14,14 +14,15 @@ const NAME = "KIDZ THESE DAYS";
 
 // Hero background tiers:
 //   video  — desktop, motion OK: live band footage (the signature)
-//   3d     — mobile, or when the video file is missing/fails to load
+//   3d     — mobile, or reduced-motion
 //   static — reduced-motion: a still amber wash, no animation
 type HeroMode = "video" | "3d" | "static";
 
 export function Hero() {
-  // null = undecided (avoids a hydration flash before we read matchMedia)
   const [mode, setMode] = useState<HeroMode | null>(null);
   const [particleCount, setParticleCount] = useState(700);
+  // Track whether the video actually started playing
+  const [videoOk, setVideoOk] = useState(false);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 768px)").matches;
@@ -39,21 +40,25 @@ export function Hero() {
       <div className="relative flex flex-1 items-center overflow-hidden rounded-[28px] border border-[var(--border)] bg-[#0B0D12]">
       {/* Background tier: live video / 3D scene / static wash */}
       <div className="absolute inset-0">
+        {/* Video — always mounted when mode=video; 3D shows beneath until video plays */}
         {mode === "video" && (
-          <video
-            className="absolute inset-0 h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/images/hero-poster.jpg"
-            // If hero.mp4 isn't present yet, drop to the 3D scene instead.
-            onError={() => setMode("3d")}
-          >
-            <source src="/video/hero.mp4" type="video/mp4" />
-            <source src="/video/hero.webm" type="video/webm" />
-          </video>
+          <>
+            {/* 3D scene underneath as a seamless fallback until video is ready */}
+            {!videoOk && <HeroScene particleCount={particleCount} />}
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ opacity: videoOk ? 1 : 0, transition: "opacity 0.8s ease" }}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onCanPlay={() => setVideoOk(true)}
+              onError={() => setVideoOk(false)}
+            >
+              <source src="/video/hero.mp4" type="video/mp4" />
+            </video>
+          </>
         )}
 
         {mode === "3d" && <HeroScene particleCount={particleCount} />}
