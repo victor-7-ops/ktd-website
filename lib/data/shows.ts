@@ -4,7 +4,7 @@ export const shows = [
     name: "Next KTD Show",
     venue: "Cebu City, Philippines",
     status: "upcoming" as const,
-    ticketUrl: "#",
+    ticketUrl: null,
   },
   {
     date: "Oct 26",

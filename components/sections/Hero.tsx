@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
@@ -21,8 +21,10 @@ type HeroMode = "video" | "3d" | "static";
 export function Hero() {
   const [mode, setMode] = useState<HeroMode | null>(null);
   const [particleCount, setParticleCount] = useState(700);
-  // Track whether the video actually started playing
   const [videoOk, setVideoOk] = useState(false);
+  // Deferred: HeroScene is only fetched when video actually fails to load
+  const [videoFailed, setVideoFailed] = useState(false);
+  const failTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 768px)").matches;
@@ -30,6 +32,24 @@ export function Hero() {
     setParticleCount(mobile ? 250 : 700);
     setMode(reduced ? "static" : mobile ? "3d" : "video");
   }, []);
+
+  // Start a 4-second fallback timer when in video mode.
+  // If the video hasn't started by then, switch to the 3D scene.
+  useEffect(() => {
+    if (mode !== "video") return;
+    failTimerRef.current = setTimeout(() => setVideoFailed(true), 4000);
+    return () => {
+      if (failTimerRef.current) clearTimeout(failTimerRef.current);
+    };
+  }, [mode]);
+
+  // Clear the failure timer once video is confirmed playing
+  useEffect(() => {
+    if (videoOk && failTimerRef.current) {
+      clearTimeout(failTimerRef.current);
+      failTimerRef.current = null;
+    }
+  }, [videoOk]);
 
   return (
     <section
@@ -40,11 +60,22 @@ export function Hero() {
       <div className="relative flex flex-1 items-center overflow-hidden rounded-[28px] border border-[var(--border)] bg-[#0B0D12]">
       {/* Background tier: live video / 3D scene / static wash */}
       <div className="absolute inset-0">
-        {/* Video — always mounted when mode=video; 3D shows beneath until video plays */}
+        {/* Video — always mounted when mode=video */}
         {mode === "video" && (
           <>
-            {/* 3D scene underneath as a seamless fallback until video is ready */}
-            {!videoOk && <HeroScene particleCount={particleCount} />}
+            {/* CSS placeholder shown until video plays; 3D scene loaded only on failure */}
+            {!videoOk && !videoFailed && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at 70% 40%, rgba(232,168,56,0.18), transparent 55%)",
+                }}
+              />
+            )}
+            {!videoOk && videoFailed && (
+              <HeroScene particleCount={particleCount} />
+            )}
             <video
               className="absolute inset-0 h-full w-full object-cover"
               style={{ opacity: videoOk ? 1 : 0, transition: "opacity 0.8s ease" }}
@@ -54,9 +85,13 @@ export function Hero() {
               playsInline
               preload="auto"
               onCanPlay={() => setVideoOk(true)}
-              onError={() => setVideoOk(false)}
+              onError={() => setVideoFailed(true)}
             >
-              <source src="/video/hero.mp4" type="video/mp4" />
+              <source
+                src="/video/hero.mp4"
+                type="video/mp4"
+                onError={() => setVideoFailed(true)}
+              />
             </video>
           </>
         )}
@@ -179,14 +214,13 @@ export function Hero() {
             animate={{ opacity: 1 }}
             transition={{ delay: 2, duration: 0.6 }}
           >
-            <a href="#" className="transition-colors hover:text-amber">
+            <a
+              href="https://instagram.com/kidzthesedaysofficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-amber"
+            >
               Instagram
-            </a>
-            <a href="#" className="transition-colors hover:text-amber">
-              Spotify
-            </a>
-            <a href="#" className="transition-colors hover:text-amber">
-              YouTube
             </a>
           </motion.div>
         </div>

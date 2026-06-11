@@ -11,11 +11,15 @@ npm run lint     # ESLint
 npm run start    # Serve production build locally
 ```
 
-No test suite exists yet. TypeScript errors surface via `npm run build`.
+```bash
+npm test         # Playwright smoke suite (starts dev server itself; installs on first run)
+```
+
+TypeScript errors surface via `npm run build`. If `npm test` reports "not found", run `npm i -D @playwright/test && npx playwright install chromium` first (see `plans/006-playwright-smoke-baseline.md`).
 
 ## Architecture
 
-Single-page Next.js 14 (App Router) site. The entire page is one scrolling document — `app/page.tsx` composes all 11 sections in order. There is no routing beyond the root.
+Single-page Next.js 16 (App Router) site. The entire page is one scrolling document — `app/page.tsx` composes all 11 sections in order. There is no routing beyond the root.
 
 ### Key architectural decisions
 
@@ -49,16 +53,20 @@ Global effects applied in `layout.tsx` / `globals.css`:
 
 ### Environment variables
 
-Create `.env.local` (none are required to run):
+Copy `.env.example` to `.env.local` (none are required to run):
 ```
-NEXT_PUBLIC_FORMSPREE_ID=      # Contact form (Section 11)
-NEXT_PUBLIC_MAILCHIMP_URL=     # Newsletter embed (Social section)
-NEXT_PUBLIC_BIG_CARTEL_SHOP=  # Merch shop handle
+NEXT_PUBLIC_FORMSPREE_ID=      # Contact form (components/sections/Contact.tsx)
+NEXT_PUBLIC_MAILCHIMP_URL=     # Newsletter embed (components/sections/Social.tsx)
+NEXT_PUBLIC_BIG_CARTEL_SHOP=  # Reserved: merch shop handle (not yet wired)
 ```
 
 ### Deployment
 
 `git push` to `master` → Vercel auto-deploys via GitHub integration. Manual: `vercel --prod`.
+
+### Implementation plans
+
+`plans/` holds advisor-generated plans for known improvements. See `plans/README.md` for execution order and status. Execute a plan with `/improve execute plans/NNN-*.md`.
 
 If replacing `public/video/hero.mp4`: re-encode to H.264 first:
 ```bash

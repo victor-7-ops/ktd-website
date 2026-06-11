@@ -11,10 +11,12 @@ import { Shows } from "@/components/sections/Shows";
 import { Merch } from "@/components/sections/Merch";
 import { Social } from "@/components/sections/Social";
 import { Contact } from "@/components/sections/Contact";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export default function Home() {
   return (
     <main>
+      <JsonLd />
       <Navbar />
       <Hero />
       <About />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, DM_Sans, Lora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { CustomCursor } from "@/components/layout/CustomCursor";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 
 const bebas = Bebas_Neue({
   weight: "400",
@@ -33,13 +34,21 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "KIDZ THESE DAYS — Cebu City Indie Pop-Rock",
-  description:
-    "Official site of KIDZ THESE DAYS (KTD), a Cebu City indie pop-rock band signed to Unstable Records. Indie Pop-Rock · OPM · City Pop · Funk.",
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "KIDZ THESE DAYS",
+    title: SITE_NAME,
     description: "Cebu City indie pop-rock. We aim to flip that script.",
     type: "website",
+    url: "/",
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: "Cebu City indie pop-rock. We aim to flip that script.",
   },
 };
 

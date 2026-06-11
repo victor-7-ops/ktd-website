@@ -1,13 +1,23 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Reveal } from "@/components/ui/Reveal";
 
-const platforms = [
+interface Platform {
+  icon: string;
+  name: string;
+  handle: string;
+  desc: string;
+  url: string | null;
+  cta: string;
+  disabled?: boolean;
+}
+
+const platforms: Platform[] = [
   { icon: "📸", name: "Instagram", handle: "@kidzthesedaysofficial", desc: "Photos, stories, and behind-the-scenes.", url: "https://instagram.com/kidzthesedaysofficial", cta: "Follow" },
-  { icon: "🎵", name: "Spotify", handle: "KIDZ THESE DAYS", desc: "Stream all releases. Save for new music alerts.", url: "#", cta: "Follow on Spotify" },
-  { icon: "▶", name: "YouTube", handle: "KIDZ THESE DAYS", desc: "Music videos, lyric videos, live performances.", url: "#", cta: "Subscribe" },
-  { icon: "🎵", name: "Apple Music", handle: "KIDZ THESE DAYS", desc: "All releases on Apple Music.", url: "#", cta: "Listen" },
-  { icon: "🎵", name: "TikTok", handle: "Coming Soon", desc: "Short-form content on the way.", url: "#", cta: "Coming Soon", disabled: true },
-  { icon: "👥", name: "Facebook", handle: "KIDZ THESE DAYS", desc: "Event updates, show announcements, community.", url: "#", cta: "Like Page" },
+  { icon: "🎵", name: "Spotify", handle: "KIDZ THESE DAYS", desc: "Stream all releases. Save for new music alerts.", url: null, cta: "Link coming soon", disabled: true },
+  { icon: "▶", name: "YouTube", handle: "KIDZ THESE DAYS", desc: "Music videos, lyric videos, live performances.", url: null, cta: "Link coming soon", disabled: true },
+  { icon: "🎵", name: "Apple Music", handle: "KIDZ THESE DAYS", desc: "All releases on Apple Music.", url: null, cta: "Link coming soon", disabled: true },
+  { icon: "🎵", name: "TikTok", handle: "Coming Soon", desc: "Short-form content on the way.", url: null, cta: "Coming Soon", disabled: true },
+  { icon: "👥", name: "Facebook", handle: "KIDZ THESE DAYS", desc: "Event updates, show announcements, community.", url: null, cta: "Link coming soon", disabled: true },
 ];
 
 export function Social() {
@@ -39,17 +49,22 @@ export function Social() {
                   <p className="font-mono text-[10px] text-amber/70">{p.handle}</p>
                 </div>
                 <p className="font-serif text-sm text-gray">{p.desc}</p>
-                <a
-                  href={p.url}
-                  className={`mt-auto inline-block rounded-full border px-4 py-2 font-sans text-xs transition-all ${
-                    p.disabled
-                      ? "cursor-default border-[var(--border)] text-gray-dim"
-                      : "border-amber text-amber hover:bg-amber hover:text-black"
-                  }`}
-                  aria-disabled={p.disabled}
-                >
-                  {p.cta}
-                </a>
+                {p.disabled || !p.url ? (
+                  <span
+                    className="mt-auto inline-block rounded-full border border-[var(--border)] px-4 py-2 font-sans text-xs text-gray-dim"
+                  >
+                    {p.cta}
+                  </span>
+                ) : (
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto inline-block rounded-full border border-amber px-4 py-2 font-sans text-xs text-amber transition-all hover:bg-amber hover:text-black"
+                  >
+                    {p.cta}
+                  </a>
+                )}
               </div>
             </Reveal>
           ))}

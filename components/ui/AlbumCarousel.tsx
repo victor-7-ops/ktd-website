@@ -29,13 +29,14 @@ export function AlbumCarousel() {
         onKeyDown={(e) => { if (e.key === "ArrowLeft") prev(); if (e.key === "ArrowRight") next(); }}
         tabIndex={0}
         role="region"
-        aria-label="Album carousel"
+        aria-label="Album carousel — use left and right arrow keys to browse"
       >
         {discography.map((d, i) => (
           <button
             key={d.title}
             onClick={() => setActive(i)}
             aria-label={`Select ${d.title}`}
+            aria-current={i === active ? "true" : undefined}
             className="absolute flex h-56 w-44 flex-col items-center justify-end overflow-hidden rounded-2xl border border-[var(--border)] md:h-64 md:w-52"
             style={{
               ...getStyle(i),
@@ -57,7 +58,11 @@ export function AlbumCarousel() {
       </div>
 
       {/* Active album info */}
-      <div className="mt-8 flex flex-col items-center gap-3 text-center">
+      <div
+        className="mt-8 flex flex-col items-center gap-3 text-center"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <span className="font-mono text-[11px] uppercase tracking-widest text-amber">
           {album.chapter}
         </span>
@@ -74,12 +79,20 @@ export function AlbumCarousel() {
           </span>
           <span className="font-mono text-[10px] text-gray-dim">{album.year}{album.duration ? ` · ${album.duration}` : ""}</span>
         </div>
-        <a
-          href={album.spotify}
-          className="mt-2 rounded-full bg-amber px-6 py-2.5 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
-        >
-          ▶ Play on Spotify
-        </a>
+        {album.spotify ? (
+          <a
+            href={album.spotify}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 rounded-full bg-amber px-6 py-2.5 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
+          >
+            ▶ Play on Spotify
+          </a>
+        ) : (
+          <span className="mt-2 rounded-full border border-[var(--border)] px-6 py-2.5 font-mono text-xs uppercase tracking-wider text-gray-dim">
+            Streaming link coming soon
+          </span>
+        )}
       </div>
 
       {/* Arrow controls */}
@@ -89,7 +102,11 @@ export function AlbumCarousel() {
         </button>
         <div className="flex gap-2">
           {discography.map((_, i) => (
-            <button key={i} onClick={() => setActive(i)} aria-label={`Go to album ${i + 1}`}
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              aria-label={`Go to album ${i + 1}`}
+              aria-current={i === active ? "true" : undefined}
               className={`h-1.5 rounded-full transition-all ${i === active ? "w-6 bg-amber" : "w-1.5 bg-gray-dim"}`}
             />
           ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
   { label: "Story", href: "#about" },
@@ -13,6 +13,8 @@ const LINKS = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -20,6 +22,37 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Escape key, scroll lock, focus management, and desktop resize close
+  useEffect(() => {
+    if (!open) return;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+
+    const onResize = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+
+    const mq = window.matchMedia("(min-width: 768px)");
+    document.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onResize);
+    document.body.style.overflow = "hidden";
+
+    // Move focus to first link in the overlay
+    const firstLink = overlayRef.current?.querySelector("a") as HTMLElement | null;
+    firstLink?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onResize);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <header
@@ -62,9 +95,11 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <button
+          ref={toggleRef}
           type="button"
           aria-label="Toggle menu"
           aria-expanded={open}
+          aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
           className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
         >
@@ -88,7 +123,11 @@ export function Navbar() {
 
       {/* Mobile overlay */}
       {open && (
-        <div className="fixed inset-0 top-[64px] z-40 flex flex-col items-center gap-6 bg-[rgba(10,10,15,0.97)] pt-16 backdrop-blur-xl md:hidden">
+        <div
+          ref={overlayRef}
+          id="mobile-menu"
+          className="fixed inset-0 top-[64px] z-40 flex flex-col items-center gap-6 bg-[rgba(10,10,15,0.97)] pt-16 backdrop-blur-xl md:hidden"
+        >
           {[...LINKS, { label: "Contact", href: "#contact" }].map((l) => (
             <a
               key={l.href}

@@ -7,30 +7,38 @@ import { Reveal } from "@/components/ui/Reveal";
 const inquiryTypes = ["Booking", "Press", "Collab", "Fan"] as const;
 type InquiryType = (typeof inquiryTypes)[number];
 
+type SubmitStatus = "idle" | "sending" | "sent" | "error";
+
 const directLinks = [
   { icon: "📸", label: "Instagram", value: "@kidzthesedaysofficial", url: "https://instagram.com/kidzthesedaysofficial" },
   { icon: "✉️", label: "Email", value: "contact@ktd.ph", url: "mailto:contact@ktd.ph" },
-  { icon: "🎵", label: "Spotify", value: "KIDZ THESE DAYS", url: "#" },
-  { icon: "▶", label: "YouTube", value: "KIDZ THESE DAYS", url: "#" },
 ];
 
 export function Contact() {
   const [inquiry, setInquiry] = useState<InquiryType>("Booking");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<SubmitStatus>("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
+    const id = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+    if (!id) {
+      setStatus("error");
+      return;
+    }
     const data = new FormData(form);
     data.set("inquiry_type", inquiry);
-    // Formspree placeholder — replace NEXT_PUBLIC_FORMSPREE_ID in .env.local
-    const id = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "placeholder";
-    await fetch(`https://formspree.io/f/${id}`, {
-      method: "POST",
-      body: data,
-      headers: { Accept: "application/json" },
-    }).catch(() => {});
-    setSubmitted(true);
+    setStatus("sending");
+    try {
+      const res = await fetch(`https://formspree.io/f/${id}`, {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" },
+      });
+      setStatus(res.ok ? "sent" : "error");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -53,7 +61,7 @@ export function Contact() {
         <div className="mt-14 grid gap-14 md:grid-cols-2">
           {/* Left — form */}
           <Reveal delay={120}>
-            {submitted ? (
+            {status === "sent" ? (
               <div className="flex h-full flex-col items-center justify-center gap-4 rounded-2xl border border-amber/30 bg-[var(--amber-faint)] p-10 text-center">
                 <span className="text-4xl">✓</span>
                 <p className="font-display text-2xl text-white">Message Sent.</p>
@@ -111,10 +119,19 @@ export function Contact() {
 
                 <button
                   type="submit"
-                  className="self-start rounded-full bg-amber px-8 py-3 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
+                  disabled={status === "sending"}
+                  className="self-start rounded-full bg-amber px-8 py-3 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow disabled:opacity-50"
                 >
-                  Send Message →
+                  {status === "sending" ? "Sending…" : "Send Message →"}
                 </button>
+
+                {status === "error" && (
+                  <p role="alert" className="font-sans text-sm text-amber">
+                    Couldn't send your message. Email us directly at{" "}
+                    <a href="mailto:contact@ktd.ph" className="underline">contact@ktd.ph</a>{" "}
+                    or try again.
+                  </p>
+                )}
               </form>
             )}
           </Reveal>
@@ -131,6 +148,7 @@ export function Contact() {
                     <li key={link.label}>
                       <a
                         href={link.url}
+                        {...(link.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                         className="group flex items-center gap-4 rounded-xl border border-transparent px-4 py-3 transition-all hover:border-[var(--border)] hover:bg-[var(--navy-soft)]"
                       >
                         <span className="text-xl">{link.icon}</span>

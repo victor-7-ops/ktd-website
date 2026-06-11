@@ -1,4 +1,19 @@
-export const discography = [
+export interface Release {
+  title: string;
+  credit: string | null;
+  year: string;
+  duration?: string;
+  label: string;
+  chapter: string;
+  desc: string;
+  spotify: string | null;
+  apple: string | null;
+  youtube: string | null;
+  accent: string;
+  highlight: boolean;
+}
+
+export const discography: Release[] = [
   {
     title: "Huli Na Ba",
     credit: "DaivJstn feat. KTD",
@@ -6,9 +21,9 @@ export const discography = [
     label: "Viva Records",
     chapter: "Collab",
     desc: "A heartfelt question to a love that may have already moved on.",
-    spotify: "#",
-    apple: "#",
-    youtube: "#",
+    spotify: null,
+    apple: null,
+    youtube: null,
     accent: "#16213e",
     highlight: false,
   },
@@ -19,9 +34,9 @@ export const discography = [
     label: "Viva Records",
     chapter: "Chapter I — The Spark",
     desc: "Where it begins. Friendship blooming into something more.",
-    spotify: "#",
-    apple: "#",
-    youtube: "#",
+    spotify: null,
+    apple: null,
+    youtube: null,
     accent: "#0d1f1a",
     highlight: false,
   },
@@ -33,9 +48,9 @@ export const discography = [
     label: "Viva Records",
     chapter: "Chapter II — The Unraveling",
     desc: "The moment everything starts to fade. The GoJam song.",
-    spotify: "#",
-    apple: "#",
-    youtube: "#",
+    spotify: null,
+    apple: null,
+    youtube: null,
     accent: "#2a1a0a",
     highlight: false,
   },
@@ -47,9 +62,9 @@ export const discography = [
     label: "Universal Music PH",
     chapter: "Chapter III — The Reckoning",
     desc: "Produced by Brian Lotho at Sonic State Audio, Manila.",
-    spotify: "#",
-    apple: "#",
-    youtube: "#",
+    spotify: null,
+    apple: null,
+    youtube: null,
     accent: "#2a0a0a",
     highlight: true,
   },

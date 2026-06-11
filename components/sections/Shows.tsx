@@ -47,12 +47,20 @@ export function Shows() {
                   </div>
 
                   {upcoming ? (
-                    <a
-                      href={show.ticketUrl ?? "#"}
-                      className="shrink-0 rounded-full bg-amber px-6 py-2.5 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
-                    >
-                      Get Tickets
-                    </a>
+                    show.ticketUrl ? (
+                      <a
+                        href={show.ticketUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 rounded-full bg-amber px-6 py-2.5 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
+                      >
+                        Get Tickets
+                      </a>
+                    ) : (
+                      <span className="shrink-0 rounded-full border border-[var(--border)] px-4 py-2 font-mono text-xs text-gray-dim">
+                        Tickets TBA
+                      </span>
+                    )
                   ) : (
                     <span className="shrink-0 rounded-full border border-[var(--border)] px-4 py-2 font-mono text-xs text-gray-dim">
                       Past Show

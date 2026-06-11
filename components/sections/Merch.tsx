@@ -53,14 +53,10 @@ export function Merch() {
                     </p>
                     <div className="mt-auto flex items-center justify-between pt-4">
                       <span className="font-mono text-lg text-amber">{item.price}</span>
-                      {/* TODO: swap href to Big Cartel product URL. To migrate to Shopify,
-                           replace with Shopify Buy Button embed or storefront API link. */}
-                      <a
-                        href="#"
-                        className="rounded-full border border-amber px-4 py-1.5 font-sans text-xs text-amber transition-all hover:bg-amber hover:text-black"
-                      >
-                        Add to Cart
-                      </a>
+                      {/* TODO: swap to Big Cartel product URL or Shopify storefront link when commerce is wired */}
+                      <span className="rounded-full border border-[var(--border)] px-4 py-1.5 font-sans text-xs text-gray-dim">
+                        Shop opening soon
+                      </span>
                     </div>
                   </div>
                 </div>

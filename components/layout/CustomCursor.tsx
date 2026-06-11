@@ -13,7 +13,8 @@ export function CustomCursor() {
 
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (!fine) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduced) return;
 
     document.body.classList.add("has-custom-cursor");
 
