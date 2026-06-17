@@ -1,0 +1,2 @@
+bug_id,title,severity,test_id,status,steps_to_reproduce,expected,actual,environment,filed_date,fixed_date,notes
+BUG-000,EXAMPLE: Hero video HEVC not playing in Chrome,P0,TC-HERO-002,FIXED,"1. Open Chrome 2. Navigate to / 3. Wait 4s","video.readyState >= 3","video never loads (HEVC unsupported)","Chrome 124 / Win11","2026-06-01","2026-06-17","Fixed by re-encoding to H.264 (commit f6c73fc)"
