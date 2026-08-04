@@ -1,11 +1,39 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { discography } from "@/lib/data/discography";
+import { getSpotifyAccentColor, getSpotifyThumbnail } from "@/lib/spotifyColor";
 
-export function AlbumCarousel() {
+interface AlbumCarouselProps {
+  onActiveChange?: (accent: string) => void;
+}
+
+export function AlbumCarousel({ onActiveChange }: AlbumCarouselProps = {}) {
   const [active, setActive] = useState(2); // start centered on Maglaho
+  const [covers, setCovers] = useState<Record<string, string>>({});
   const count = discography.length;
+
+  useEffect(() => {
+    let cancelled = false;
+    discography.forEach((d) => {
+      if (!d.spotify) return;
+      getSpotifyThumbnail(d.spotify).then((url) => {
+        if (!cancelled && url) setCovers((prev) => ({ ...prev, [d.spotify as string]: url }));
+      });
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    const current = discography[active];
+    onActiveChange?.(current.accent); // fallback while real color loads
+    if (!current.spotify) return;
+    let cancelled = false;
+    getSpotifyAccentColor(current.spotify).then((color) => {
+      if (!cancelled && color) onActiveChange?.(color);
+    });
+    return () => { cancelled = true; };
+  }, [active, onActiveChange]);
 
   const prev = useCallback(() => setActive((i) => (i - 1 + count) % count), [count]);
   const next = useCallback(() => setActive((i) => (i + 1) % count), [count]);
@@ -19,6 +47,9 @@ export function AlbumCarousel() {
   };
 
   const album = discography[active];
+  const spotifyEmbedSrc = album.spotify
+    ? album.spotify.replace("open.spotify.com/track/", "open.spotify.com/embed/track/")
+    : null;
 
   return (
     <div className="w-full">
@@ -44,10 +75,19 @@ export function AlbumCarousel() {
               transition: "transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.5s, filter 0.5s",
             }}
           >
-            {/* Album art placeholder — big title */}
-            <span className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-4xl tracking-wide text-white/10 md:text-5xl">
-              {d.title.split(" ").map((w) => w[0]).join("")}
-            </span>
+            {/* Album art — real Spotify cover once loaded, letter placeholder until then */}
+            {d.spotify && covers[d.spotify] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={covers[d.spotify]}
+                alt=""
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-4xl tracking-wide text-white/10 md:text-5xl">
+                {d.title.split(" ").map((w) => w[0]).join("")}
+              </span>
+            )}
             {/* Bottom scrim */}
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/80 to-transparent" />
             <p className="relative z-10 mb-3 px-3 text-center font-display text-lg tracking-wide text-white">
@@ -79,15 +119,18 @@ export function AlbumCarousel() {
           </span>
           <span className="font-mono text-[10px] text-gray-dim">{album.year}{album.duration ? ` · ${album.duration}` : ""}</span>
         </div>
-        {album.spotify ? (
-          <a
-            href={album.spotify}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 rounded-full bg-amber px-6 py-2.5 font-sans text-sm font-medium text-black transition-colors hover:bg-amber-glow"
-          >
-            ▶ Play on Spotify
-          </a>
+        {spotifyEmbedSrc ? (
+          <iframe
+            key={spotifyEmbedSrc}
+            title={`${album.title} — Spotify player`}
+            src={spotifyEmbedSrc}
+            width="100%"
+            height="152"
+            style={{ maxWidth: 360, borderRadius: 12, marginTop: 8 }}
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          />
         ) : (
           <span className="mt-2 rounded-full border border-[var(--border)] px-6 py-2.5 font-mono text-xs uppercase tracking-wider text-gray-dim">
             Streaming link coming soon

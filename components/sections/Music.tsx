@@ -1,10 +1,28 @@
+"use client";
+
+import { useState } from "react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Reveal } from "@/components/ui/Reveal";
 import { AlbumCarousel } from "@/components/ui/AlbumCarousel";
 
+function withAlpha(color: string, alpha: number): string {
+  if (color.startsWith("rgb(")) return color.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+  if (color.startsWith("#")) {
+    const a = Math.round(alpha * 255).toString(16).padStart(2, "0");
+    return `${color}${a}`;
+  }
+  return color;
+}
+
 export function Music() {
+  const [accent, setAccent] = useState("#2a1a0a"); // Maglaho default
+
   return (
-    <section id="music" className="bg-black py-28 px-6 md:px-10">
+    <section
+      id="music"
+      className="bg-black py-28 px-6 md:px-10 transition-[background] duration-700 ease-out"
+      style={{ background: `radial-gradient(circle at 50% 30%, ${withAlpha(accent, 0.35)}, #000 70%)` }}
+    >
       <div className="mx-auto max-w-5xl">
         <Reveal>
           <SectionLabel>Discography</SectionLabel>
@@ -31,7 +49,7 @@ export function Music() {
 
         <Reveal delay={200}>
           <div className="mt-14">
-            <AlbumCarousel />
+            <AlbumCarousel onActiveChange={setAccent} />
           </div>
         </Reveal>
       </div>
