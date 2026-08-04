@@ -1,8 +1,9 @@
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Reveal } from "@/components/ui/Reveal";
+import { SocialIcon, type SocialPlatform } from "@/components/ui/SocialIcon";
 
 interface Platform {
-  icon: string;
+  icon: SocialPlatform;
   name: string;
   handle: string;
   desc: string;
@@ -12,12 +13,13 @@ interface Platform {
 }
 
 const platforms: Platform[] = [
-  { icon: "📸", name: "Instagram", handle: "@kidzthesedaysofficial", desc: "Photos, stories, and behind-the-scenes.", url: "https://instagram.com/kidzthesedaysofficial", cta: "Follow" },
-  { icon: "🎵", name: "Spotify", handle: "KIDZ THESE DAYS", desc: "Stream all releases. Save for new music alerts.", url: null, cta: "Link coming soon", disabled: true },
-  { icon: "▶", name: "YouTube", handle: "KIDZ THESE DAYS", desc: "Music videos, lyric videos, live performances.", url: null, cta: "Link coming soon", disabled: true },
-  { icon: "🎵", name: "Apple Music", handle: "KIDZ THESE DAYS", desc: "All releases on Apple Music.", url: null, cta: "Link coming soon", disabled: true },
-  { icon: "🎵", name: "TikTok", handle: "Coming Soon", desc: "Short-form content on the way.", url: null, cta: "Coming Soon", disabled: true },
-  { icon: "👥", name: "Facebook", handle: "KIDZ THESE DAYS", desc: "Event updates, show announcements, community.", url: null, cta: "Link coming soon", disabled: true },
+  { icon: "instagram", name: "Instagram", handle: "@kidzthesedaysofficial", desc: "Photos, stories, and behind-the-scenes.", url: "https://instagram.com/kidzthesedaysofficial", cta: "Follow" },
+  { icon: "spotify", name: "Spotify", handle: "KIDZ THESE DAYS", desc: "Stream all releases. Save for new music alerts.", url: "https://open.spotify.com/artist/5GrDJeJ2GOtwSYtANnpBEv", cta: "Follow" },
+  { icon: "youtube", name: "YouTube", handle: "KIDZ THESE DAYS", desc: "Music videos, lyric videos, live performances.", url: null, cta: "Link coming soon", disabled: true },
+  { icon: "apple-music", name: "Apple Music", handle: "KIDZ THESE DAYS", desc: "All releases on Apple Music.", url: "https://music.apple.com/ph/artist/kidz-these-days/1676735201", cta: "Follow" },
+  { icon: "tiktok", name: "TikTok", handle: "@kidzthesedaysofficial", desc: "Short-form content, covers, and rehearsal clips.", url: "https://tiktok.com/@kidzthesedaysofficial", cta: "Follow" },
+  { icon: "facebook", name: "Facebook", handle: "KIDZ THESE DAYS", desc: "Event updates, show announcements, community.", url: "https://facebook.com/kidzthesedaysofficial", cta: "Follow" },
+  { icon: "x", name: "X (Twitter)", handle: "@ktdmusic_ph", desc: "Quick updates and behind-the-scenes chatter.", url: "https://twitter.com/ktdmusic_ph", cta: "Follow" },
 ];
 
 export function Social() {
@@ -43,7 +45,7 @@ export function Social() {
           {platforms.map((p, i) => (
             <Reveal key={p.name} delay={i * 50}>
               <div className={`flex h-full flex-col gap-3 rounded-2xl border p-6 transition-colors ${p.disabled ? "border-[var(--border)] opacity-40" : "border-[var(--border)] hover:border-amber/30"} bg-[var(--navy-soft)]`}>
-                <span className="text-2xl">{p.icon}</span>
+                <SocialIcon platform={p.icon} className="h-6 w-6 text-amber" />
                 <div>
                   <p className="font-sans text-sm font-semibold text-white">{p.name}</p>
                   <p className="font-mono text-[10px] text-amber/70">{p.handle}</p>
