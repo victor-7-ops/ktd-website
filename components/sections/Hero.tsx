@@ -59,7 +59,12 @@ export function Hero() {
   const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-time post-hydration flag; see comment above.
   useEffect(() => setMounted(true), []);
-  const mode: HeroMode | null = !mounted ? null : reduced ? "static" : mobile ? "3d" : "video";
+  let mode: HeroMode | null = null;
+  if (mounted) {
+    if (reduced) mode = "static";
+    else if (mobile) mode = "3d";
+    else mode = "video";
+  }
 
   const [videoOk, setVideoOk] = useState(false);
   // Deferred: HeroScene is only fetched when video actually fails to load
