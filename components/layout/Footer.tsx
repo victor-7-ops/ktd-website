@@ -12,7 +12,7 @@ export function Footer() {
               KIDZ THESE DAYS
             </p>
             <p className="mt-2 font-serif text-sm italic text-gray">
-              "We aim to flip that script."
+              &ldquo;We aim to flip that script.&rdquo;
             </p>
           </div>
 

@@ -60,7 +60,7 @@ export function Members() {
                     </p>
                     <hr className="mt-auto border-[var(--border)]" />
                     <p className="font-serif text-sm italic text-amber/80">
-                      "{m.quote}"
+                      &ldquo;{m.quote}&rdquo;
                     </p>
                   </div>
                 </div>

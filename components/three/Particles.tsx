@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -15,7 +15,7 @@ interface ParticlesProps {
 export function Particles({ count = 1200 }: ParticlesProps) {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const { positions, speeds } = useMemo(() => {
+  const [{ positions, speeds }] = useState(() => {
     const positions = new Float32Array(count * 3);
     const speeds = new Float32Array(count);
     for (let i = 0; i < count; i++) {
@@ -25,7 +25,7 @@ export function Particles({ count = 1200 }: ParticlesProps) {
       speeds[i] = 0.15 + Math.random() * 0.4;
     }
     return { positions, speeds };
-  }, [count]);
+  });
 
   useFrame((_, delta) => {
     const pts = pointsRef.current;

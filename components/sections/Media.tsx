@@ -95,7 +95,7 @@ export function Media() {
               {/* Replace the div below with an <iframe> when the real video ID is known */}
               <div className="flex flex-col items-center gap-3 text-center">
                 <span className="text-4xl">▶</span>
-                <span className="font-display text-xl text-white">"Huli Na Ba" — Lyric Video</span>
+                <span className="font-display text-xl text-white">&ldquo;Huli Na Ba&rdquo; — Lyric Video</span>
                 <span className="font-mono text-xs text-gray-dim">YouTube embed · add video ID to Media.tsx</span>
               </div>
             </div>

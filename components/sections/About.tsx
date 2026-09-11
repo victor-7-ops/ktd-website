@@ -43,8 +43,8 @@ export function About() {
                 He came to evaluate other bands. He stayed to complete the sound.
               </p>
               <p>
-                The name came from Victor. "Kids these days" — a phrase people
-                say with disappointment. He flipped it. The "z" is deliberate.
+                The name came from Victor. &ldquo;Kids these days&rdquo; — a phrase people
+                say with disappointment. He flipped it. The &ldquo;z&rdquo; is deliberate.
                 KIDZ THESE DAYS exists to prove this generation is open to new
                 experiments and fresh ideas in music.
               </p>
@@ -54,7 +54,7 @@ export function About() {
                 className="mt-10 border-l-2 border-amber pl-6 font-serif italic text-white"
                 style={{ fontSize: "var(--text-heading)" }}
               >
-                "We aim to flip that script."
+                &ldquo;We aim to flip that script.&rdquo;
                 <cite className="mt-3 block font-sans text-sm not-italic text-amber/70">
                   — Victor Alexis, Drums
                 </cite>

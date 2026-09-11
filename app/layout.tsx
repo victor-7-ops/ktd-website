@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, DM_Sans, Lora, JetBrains_Mono } from "next/font/google";
+import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import { CustomCursor } from "@/components/layout/CustomCursor";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
@@ -65,7 +66,7 @@ export default function RootLayout({
       <body>
         <div className="grain" aria-hidden="true" />
         <CustomCursor />
-        {children}
+        <MotionConfig reducedMotion="user">{children}</MotionConfig>
       </body>
     </html>
   );

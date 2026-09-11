@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 
@@ -35,7 +35,7 @@ function GeoMesh({ kind }: { kind: GeoKind }) {
 
 function FloatingShape({ shape }: { shape: Shape }) {
   const ref = useRef<Group>(null);
-  const seed = useRef(Math.random() * 100);
+  const [seed] = useState(() => Math.random() * 100);
 
   useFrame((state, delta) => {
     const g = ref.current;
@@ -45,7 +45,7 @@ function FloatingShape({ shape }: { shape: Shape }) {
     g.rotation.y += shape.rotSpeed[1] * d;
     // gentle vertical bob
     g.position.y =
-      shape.position[1] + Math.sin(state.clock.elapsedTime * 0.4 + seed.current) * 0.3;
+      shape.position[1] + Math.sin(state.clock.elapsedTime * 0.4 + seed) * 0.3;
   });
 
   return (

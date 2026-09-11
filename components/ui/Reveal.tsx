@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 interface RevealProps {
   children: ReactNode;
-  as?: ElementType;
   className?: string;
   /** Stagger delay in ms. */
   delay?: number;
@@ -14,12 +13,7 @@ interface RevealProps {
  * IntersectionObserver-driven reveal. Adds `.is-visible` once in view.
  * Honors prefers-reduced-motion via the CSS rule in globals.css.
  */
-export function Reveal({
-  children,
-  as: Tag = "div",
-  className = "",
-  delay = 0,
-}: RevealProps) {
+export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

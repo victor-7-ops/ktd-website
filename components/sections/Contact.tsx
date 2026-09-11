@@ -52,7 +52,7 @@ export function Contact() {
             className="mt-4 font-display leading-[0.9] tracking-wide text-white"
             style={{ fontSize: "var(--text-display)" }}
           >
-            Let's Make
+            Let&apos;s Make
             <br />
             <span className="text-amber">Something.</span>
           </h2>
@@ -65,7 +65,7 @@ export function Contact() {
               <div className="flex h-full flex-col items-center justify-center gap-4 rounded-2xl border border-amber/30 bg-[var(--amber-faint)] p-10 text-center">
                 <span className="text-4xl">✓</span>
                 <p className="font-display text-2xl text-white">Message Sent.</p>
-                <p className="font-serif text-sm text-gray">We'll get back to you soon.</p>
+                <p className="font-serif text-sm text-gray">We&apos;ll get back to you soon.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -127,7 +127,7 @@ export function Contact() {
 
                 {status === "error" && (
                   <p role="alert" className="font-sans text-sm text-amber">
-                    Couldn't send your message. Email us directly at{" "}
+                    Couldn&apos;t send your message. Email us directly at{" "}
                     <a href="mailto:contact@ktd.ph" className="underline">contact@ktd.ph</a>{" "}
                     or try again.
                   </p>

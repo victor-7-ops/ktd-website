@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
@@ -18,20 +18,53 @@ const NAME = "KIDZ THESE DAYS";
 //   static — reduced-motion: a still amber wash, no animation
 type HeroMode = "video" | "3d" | "static";
 
+// Module-level (stable) media-query subscriptions — reading `matchMedia` via
+// useSyncExternalStore instead of once in an effect avoids a setState-during-
+// render cascade. Subscribe/getSnapshot must stay referentially stable across
+// renders, or the store resubscribes every render.
+const mobileQuery = "(max-width: 768px)";
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribe(query: string) {
+  return (onChange: () => void) => {
+    const mql = window.matchMedia(query);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  };
+}
+const subscribeMobile = subscribe(mobileQuery);
+const subscribeReducedMotion = subscribe(reducedMotionQuery);
+const getMobileSnapshot = () => window.matchMedia(mobileQuery).matches;
+const getReducedMotionSnapshot = () => window.matchMedia(reducedMotionQuery).matches;
+const getServerSnapshot = () => false; // assume desktop/motion-OK until hydrated
+
+function useMediaQuery(
+  subscribeFn: (onChange: () => void) => () => void,
+  getSnapshot: () => boolean
+) {
+  return useSyncExternalStore(subscribeFn, getSnapshot, getServerSnapshot);
+}
+
 export function Hero() {
-  const [mode, setMode] = useState<HeroMode | null>(null);
-  const [particleCount, setParticleCount] = useState(700);
+  const mobile = useMediaQuery(subscribeMobile, getMobileSnapshot);
+  const reduced = useMediaQuery(subscribeReducedMotion, getReducedMotionSnapshot);
+  const particleCount = mobile ? 250 : 700;
+
+  // Deliberately gated behind a client-only effect (not derived directly from
+  // useMediaQuery) so the <video> tag is absent from the server-rendered HTML.
+  // If it rendered during SSR, the browser could fire its native `canplay`
+  // event before React attaches the onCanPlay handler during hydration —
+  // videoOk would then never flip true, and the hero would wrongly fall back
+  // to the 3D scene after the 4s timer even though the video plays fine.
+  const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional one-time post-hydration flag; see comment above.
+  useEffect(() => setMounted(true), []);
+  const mode: HeroMode | null = !mounted ? null : reduced ? "static" : mobile ? "3d" : "video";
+
   const [videoOk, setVideoOk] = useState(false);
   // Deferred: HeroScene is only fetched when video actually fails to load
   const [videoFailed, setVideoFailed] = useState(false);
   const failTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const mobile = window.matchMedia("(max-width: 768px)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setParticleCount(mobile ? 250 : 700);
-    setMode(reduced ? "static" : mobile ? "3d" : "video");
-  }, []);
 
   // Start a 4-second fallback timer when in video mode.
   // If the video hasn't started by then, switch to the 3D scene.

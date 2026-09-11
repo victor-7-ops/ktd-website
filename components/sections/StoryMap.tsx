@@ -177,7 +177,7 @@ function ChapterPanel({
           {chapter.locked && (
             <div className="mt-6 flex flex-col items-center gap-2 py-4">
               <span className="text-3xl">🔒</span>
-              <p className="font-sans text-xs text-gray-dim">The story isn't over.</p>
+              <p className="font-sans text-xs text-gray-dim">The story isn&apos;t over.</p>
             </div>
           )}
 
