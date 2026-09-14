@@ -121,7 +121,7 @@ export function Hero() {
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
               onCanPlay={() => setVideoOk(true)}
               onError={() => setVideoFailed(true)}
             >
@@ -181,7 +181,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
           >
             <SectionLabel>Cebu City · Since 2022</SectionLabel>
           </motion.div>
@@ -204,7 +204,7 @@ export function Hero() {
                       initial={{ y: "100%" }}
                       animate={{ y: 0 }}
                       transition={{
-                        delay: 0.8 + (wi * 6 + ci) * 0.04,
+                        delay: 0.2 + (wi * 6 + ci) * 0.02,
                         duration: 0.6,
                         ease: [0.22, 1, 0.36, 1],
                       }}
@@ -221,7 +221,7 @@ export function Hero() {
             className="mt-6 font-serif text-xl text-gray md:text-2xl"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 0.6 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
           >
             Indie Pop-Rock · OPM · City Pop · Funk
           </motion.p>
@@ -230,7 +230,7 @@ export function Hero() {
             className="mt-10 flex flex-wrap items-center gap-4"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.7, duration: 0.6 }}
+            transition={{ delay: 0.65, duration: 0.6 }}
           >
             <a
               href="#music"
@@ -250,7 +250,7 @@ export function Hero() {
             className="mt-12 flex gap-6 font-mono text-xs uppercase tracking-widest text-gray-dim"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2, duration: 0.6 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
           >
             <a
               href="https://instagram.com/kidzthesedaysofficial"
@@ -269,7 +269,7 @@ export function Hero() {
         className="absolute bottom-8 right-8 hidden flex-col items-center gap-2 md:flex"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.2, duration: 0.6 }}
+        transition={{ delay: 0.9, duration: 0.6 }}
       >
         <span className="font-mono text-[10px] uppercase tracking-widest text-gray-dim">
           Scroll
