@@ -68,7 +68,9 @@ test("shows section renders without crash", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("#shows")).toBeAttached();
   // section exists — empty or populated, must not error
-  const sectionHeight = await page.locator("#shows").evaluate((el) => el.offsetHeight);
+  const sectionHeight = await page
+    .locator("#shows")
+    .evaluate((el) => (el as HTMLElement).offsetHeight);
   expect(sectionHeight).toBeGreaterThan(0);
 });
 
@@ -123,7 +125,7 @@ test("no horizontal overflow at 390px", async ({ page }) => {
 test("no server-side env vars in __NEXT_DATA__", async ({ page }) => {
   await page.goto("/");
   const nextData = await page.evaluate(
-    () => JSON.stringify((window as Record<string, unknown>).__NEXT_DATA__ ?? {})
+    () => JSON.stringify((window as unknown as Record<string, unknown>).__NEXT_DATA__ ?? {})
   );
   // Should not contain anything that looks like a secret key pattern
   expect(nextData).not.toMatch(/sk[-_][A-Za-z0-9]{20,}/); // Stripe / generic secret key pattern
@@ -143,7 +145,7 @@ test("external links have noopener", async ({ page }) => {
           const rel = a.getAttribute("rel") ?? "";
           return !rel.includes("noopener");
         })
-        .map((a) => a.href)
+        .map((a) => (a as HTMLAnchorElement).href)
   );
   expect(badLinks).toHaveLength(0);
 });
