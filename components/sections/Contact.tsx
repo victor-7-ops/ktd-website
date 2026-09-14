@@ -165,22 +165,21 @@ export function Contact() {
                 </ul>
               </div>
 
-              {/* EPK download */}
+              {/* EPK download — hidden until /public/ktd-epk.pdf exists.
+                  To bring back: drop the real PDF in public/, then restore
+                  the <a href="/ktd-epk.pdf"> link this replaced. */}
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--navy-soft)] p-6">
                 <p className="font-sans text-sm font-semibold text-white">
                   Electronic Press Kit
                 </p>
                 <p className="mt-1 font-serif text-xs leading-relaxed text-gray">
                   Bio, photos, press quotes, streaming stats, and booking info —
-                  all in one document.
+                  all in one document. Coming soon — reach out via email in the
+                  meantime.
                 </p>
-                {/* TODO: replace href with real EPK PDF path in /public/ktd-epk.pdf */}
-                <a
-                  href="/ktd-epk.pdf"
-                  className="mt-4 inline-block rounded-full border border-amber px-5 py-2.5 font-sans text-sm text-amber transition-all hover:bg-amber hover:text-black"
-                >
-                  Download Electronic Press Kit (EPK)
-                </a>
+                <span className="mt-4 inline-block rounded-full border border-[var(--border)] px-5 py-2.5 font-sans text-sm text-gray-dim">
+                  EPK coming soon
+                </span>
               </div>
             </div>
           </Reveal>
